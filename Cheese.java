@@ -8,7 +8,7 @@ public class Cheese extends Decorator{
     }
 
     public String getDescription(){
-        return wrappee.getDescription() + "Cheese" + ( (amount == 1 ? "" : " x" + amount) );
+        return wrappee.getDescription() + "Cheese" + ( (amount == 1 ? "" : " x" + amount) ) + "\n";
     }
 
     public double getCost(){

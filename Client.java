@@ -29,15 +29,15 @@ public class Client {
     }
 
     public static void showToppings(){
-        System.out.println("1. Cheese\n" +
-        "2. Pico De Gallo\n" + 
-        "3. Lettuce\n" +
-        "4. Sour Cream\n" +
-        "5. Guacamole\n" +
-        "6. Mango Salsa\n" +
-        "7. Peach Salsa\n" +
-        "8. Mild Sauce\n" +
-        "9. Hot Sauce\n" +
+        System.out.println("1. Cheese ($0.50)\n" +
+        "2. Pico De Gallo ($0.20)\n" + 
+        "3. Lettuce ($0.10)\n" +
+        "4. Sour Cream ($0.50)\n" +
+        "5. Guacamole ($2.00)\n" +
+        "6. Mango Salsa ($1.00)\n" +
+        "7. Peach Salsa ($1.00)\n" +
+        "8. Mild Sauce ($0.05)\n" +
+        "9. Hot Sauce ($0.05)\n" +
         "Press 0 for no more toppings.");
     }
 
@@ -120,22 +120,23 @@ public class Client {
             case 1:
                 return new Cheese(current, amount);
             case 2:
-
+                return new PicoDeGallo(current, amount);
             case 3:
-    
+                return new Lettuce(current, amount);
             case 4:
-    
+                return new SourCream(current, amount);
             case 5:
-        
+                return new Guacamole(current, amount);
             case 6:
-           
+                return new MangoSalsa(current, amount);
             case 7:
-            
+                return new PeachSalsa(current, amount);
             case 8:
-            
+                return new MildSauce(current, amount);
             case 9:
-            
+                return new HotSauce(current, amount);
             default:
+                System.out.println("That was incomprehensible. Let's try that again.");
                 return current;
         }
     }
@@ -224,7 +225,7 @@ public class Client {
             }
             if(myOrder != null){
                 System.out.println("Here's your order:\n" + myOrder.getDescription());
-                System.out.println("Total cost: $" + myOrder.getCost());
+                System.out.printf("Total cost: $%.2f\n" + myOrder.getCost());
 
                 System.out.println("Would you like to get some more food (Y/N)?");
                 again = Character.toUpperCase(input.next().charAt(0));
