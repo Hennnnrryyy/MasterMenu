@@ -1,9 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
-
-import sun.awt.AWTAccessor.SystemColorAccessor;
-
 import java.lang.Character;
 
 public class Client {
@@ -136,10 +133,35 @@ public class Client {
             case 9:
                 return new HotSauce(current, amount);
             default:
-                System.out.println("That was incomprehensible. Let's try that again.");
+                //System.out.println("That was incomprehensible. Let's try that again.");
                 return current;
         }
     }
+
+    public static Component customizeLeaf(Scanner input, String leaf){
+        System.out.println("What type of rice would you like on your " + leaf + "?");
+        String rice =  input.nextLine();
+        System.out.println("What type of meat would you like on your " + leaf + "?");
+        String meat = input.nextLine();
+        Component myOrder = null;
+        switch (leaf){
+            case "Taco":
+                myOrder = new Taco(rice, meat);
+            break;
+            case "Burrito":
+                myOrder = new Burrito(rice, meat);
+            break;
+            case "Bowl":
+                myOrder = new Bowl(rice, meat);
+            break;
+        }
+        ArrayList<Integer> formattedToppings = getToppingsWithAmount(askForToppings(input));
+        for(int j = 0; j < formattedToppings.size(); j+=2){
+            myOrder = addTopping(formattedToppings.get(j), formattedToppings.get(j+1), myOrder);
+        }
+        return myOrder;
+    }
+
     private static int getOrderNumber(){
         return 4;
     }
@@ -161,71 +183,116 @@ public class Client {
                 break;
 
                 case 1:
-                    System.out.println("What type of rice would you like?");
-                    String rice =  input.next();
-                    System.out.println("What type of meat would you like?");
-                    String meat = input.next();
-                    myOrder = new Taco(rice, meat);
-                    ArrayList<Integer> formattedToppings = getToppingsWithAmount(askForToppings(input));
-                    for(int j = 0; j < formattedToppings.size(); j+=2){
-                        myOrder = addTopping(formattedToppings.get(j), formattedToppings.get(j+1), myOrder);
-                    }
+                    myOrder = customizeLeaf(input, "Taco");
                 break;
 
                 case 2:
-                    System.out.println("What type of rice would you like?");
-                    String rice2 =  input.next();
-                    System.out.println("What type of meat would you like?");
-                    String meat2 = input.next();
-                    myOrder = new Burrito(rice2, meat2);
-                    ArrayList<Integer> formattedToppings2 = getToppingsWithAmount(askForToppings(input));
-                    for(int j = 0; j < formattedToppings2.size(); j+=2){
-                        myOrder = addTopping(formattedToppings2.get(j), formattedToppings2.get(j+1), myOrder);
-                    }
+                    myOrder = customizeLeaf(input, "Burrito");
                 break;
 
                 case 3:
-                    System.out.println("What type of rice would you like?");
-                    String rice3 =  input.next();
-                    System.out.println("What type of meat would you like?");
-                    String meat3 = input.next();
-                    myOrder = new Bowl(rice3, meat3);
-                    ArrayList<Integer> formattedToppings3 = getToppingsWithAmount(askForToppings(input));
-                    for(int j = 0; j < formattedToppings3.size(); j+=2){
-                        myOrder = addTopping(formattedToppings3.get(j), formattedToppings3.get(j+1), myOrder);
-                    }
+                    myOrder = customizeLeaf(input, "Bowl");
                 break;
 
                 case 4:
-
+                    Composite tacoSalad = new Composite("Taco Salad");
+                    Composite bowl = new Composite("Bowl");
+                    bowl.add(new Taco("White","Chicken"));
+                    bowl.add(new Taco("White","Chicken"));
+                    bowl.add(new Taco("White","Chicken"));
+                    tacoSalad.add(bowl);
+                    myOrder = tacoSalad;
+                    // Where to go from here? Make classes for each composite? Or no? How to keep track of tree?
+                    //(Composite) (tacoSalad.getChildren().get(0)).add(new Taco("White", "Chicken"));;
+                    
                 break;
 
                 case 5:
-
+                    
                 break;
 
                 case 6:
-
+                    Composite orderOfTacos = new Composite("Three tacos");
+                    System.out.println("Customize taco #1:");
+                    orderOfTacos.add(customizeLeaf(input, "Taco"));
+                    System.out.println("Customize taco #2:");
+                    orderOfTacos.add(customizeLeaf(input, "Taco"));
+                    System.out.println("Customize taco #3:");
+                    orderOfTacos.add(customizeLeaf(input, "Taco"));
+                    myOrder = orderOfTacos;
                 break;
 
                 case 7:
-
+                    Composite travelersPack = new Composite("Traveler's pack");
+                    System.out.println("Customize taco #1:");
+                    travelersPack.add(customizeLeaf(input, "Taco"));
+                    System.out.println("Customize taco #2:");
+                    travelersPack.add(customizeLeaf(input, "Taco"));
+                    System.out.println("Customize burrito:");
+                    travelersPack.add(customizeLeaf(input, "Burrito"));
+                    myOrder = travelersPack;
                 break;
 
                 case 8:
-
+                    Composite samplerPack = new Composite("Sampler pack");
+                    System.out.println("Customize taco:");
+                    samplerPack.add(customizeLeaf(input, "Taco"));
+                    System.out.println("Customize burrito:");
+                    samplerPack.add(customizeLeaf(input, "Burrito"));
+                    System.out.println("Customize bowl:");
+                    samplerPack.add(customizeLeaf(input, "Bowl"));
+                    myOrder = samplerPack;
                 break;
 
                 case 9:
+                    Composite partyPack = new Composite("Party pack");
+                    Composite orderOfTacos1 = new Composite("First order of tacos");
+                    System.out.println("Customization of first order of tacos:");
+                    System.out.println("Customize taco #1:");
+                    orderOfTacos1.add(customizeLeaf(input, "Taco"));
+                    System.out.println("Customize taco #2:");
+                    orderOfTacos1.add(customizeLeaf(input, "Taco"));
+                    System.out.println("Customize taco #3:");
+                    orderOfTacos1.add(customizeLeaf(input, "Taco"));
 
+                    Composite orderOfTacos2 = new Composite("Second order of tacos");
+                    System.out.println("Customization of second order of tacos:");
+                    System.out.println("Customize taco #4:");
+                    orderOfTacos2.add(customizeLeaf(input, "Taco"));
+                    System.out.println("Customize taco #5:");
+                    orderOfTacos2.add(customizeLeaf(input, "Taco"));
+                    System.out.println("Customize taco #6:");
+                    orderOfTacos2.add(customizeLeaf(input, "Taco"));
+
+                    Composite orderOfTacos3 = new Composite("Third order of tacos");
+                    System.out.println("Customization of third order of tacos:");
+                    System.out.println("Customize taco #7:");
+                    orderOfTacos3.add(customizeLeaf(input, "Taco"));
+                    System.out.println("Customize taco #8:");
+                    orderOfTacos3.add(customizeLeaf(input, "Taco"));
+                    System.out.println("Customize taco #9:");
+                    orderOfTacos3.add(customizeLeaf(input, "Taco"));
+
+                    partyPack.add(orderOfTacos1);
+                    partyPack.add(orderOfTacos2);
+                    partyPack.add(orderOfTacos3);
+
+                    System.out.println("Customize burrito #1:");
+                    partyPack.add(customizeLeaf(input, "Burrito"));
+                    System.out.println("Customize burrito #2:");
+                    partyPack.add(customizeLeaf(input, "Burrito"));
+                    System.out.println("Customize bowl:");
+                    partyPack.add(customizeLeaf(input, "Bowl"));
+
+                    myOrder = partyPack;
                 break;
 
                 default:
                 break;
             }
             if(myOrder != null){
-                System.out.println("Here's your order:\n" + myOrder.getDescription());
-                System.out.printf("Total cost: $%.2f\n" + myOrder.getCost());
+                System.out.println("\nHere's your order:\n" + myOrder.getDescription());
+                System.out.printf("Total cost: $%.2f\n", myOrder.getCost());
 
                 System.out.println("Would you like to get some more food (Y/N)?");
                 again = Character.toUpperCase(input.next().charAt(0));
