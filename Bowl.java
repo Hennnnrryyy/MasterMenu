@@ -4,6 +4,6 @@ public class Bowl extends Leaf{
         super(r,m);
     }
 
-    public String getDescription(){return "Bowl with: " + "\n" + riceType + " rice\n" + meatType + "\n";}
+    public String getDescription(){return "\nBowl with: " + "\n" + riceType + " rice\n" + meatType + "\n";}
     public double getCost(){return 7;}
 }

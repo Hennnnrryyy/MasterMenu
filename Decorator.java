@@ -5,4 +5,20 @@ public abstract class Decorator implements Component{
        wrappee = c;
        amount = i;
     }
+
+    public Decorator getSubject() {
+        return this;
+      }
+
+    public void removeDecorator(Decorator toRemove) {
+        if (wrappee == null) {
+          return;
+        } else if (wrappee.equals(toRemove)) {
+            wrappee = getSubject();
+        } else {
+            this.removeDecorator(toRemove);
+        }
+      }
+      
+      
 }

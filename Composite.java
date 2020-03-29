@@ -1,14 +1,15 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class Composite implements Component{
+public class Composite implements Component {
 
-    private ArrayList<Component> children = new ArrayList<Component>();
-    private String name;
+    protected ArrayList<Component> children = new ArrayList<Component>();
+    protected String name;
 
     public Composite(String name){
         this.name = name;
     }
+
 
     public void add(Component c){children.add(c);}
     public void remove(Component c){children.remove(c);}

@@ -4,7 +4,8 @@ import java.util.Scanner;
 import java.lang.Character;
 
 public class Client {
-
+    public static double runningTotal;
+    public static Composite totalOrder = new Composite("Total order");
     public static void walkToStand(){
         System.out.println("You walk up to the only Taco Stand open during quarantine.");
         System.out.println("Your order number is #" + getOrderNumber());
@@ -35,11 +36,10 @@ public class Client {
         "7. Peach Salsa ($1.00)\n" +
         "8. Mild Sauce ($0.05)\n" +
         "9. Hot Sauce ($0.05)\n" +
-        "Press 0 for no more toppings.");
+        "Press 0 for no more toppings or press R to remove topping or enter an allergy.");
     }
 
     public static int optionHandler(char o, String zero){
-        int i = 0;
         switch(o){
             case '0':
                 System.out.println(zero);
@@ -62,6 +62,10 @@ public class Client {
                 return 8;
             case '9':
                 return 9;
+            case 'r':
+                return 99; // Special code meaning to remove topping
+            case 'R':
+                return 99; // Special code meaning to remove topping
             default:
                 System.out.println("We could not understand what you were trying to say. Maybe remove the mask and pick a number 0-9.");
                 return -1;
@@ -81,7 +85,53 @@ public class Client {
 
             c = input.next().charAt(0);
             j = optionHandler(c, "No more toppings? That's okay, quarantine must have you financially stressed\n");
-            toppingList.add(j);
+            if(j == 99){
+                System.out.println("Which topping would you like to remove or are allergic to?");
+                showToppings();
+                //input.nextLine();
+                c = input.next().charAt(0);
+                j = optionHandler(c, "You changed your mind? That's all good! Let's continue");
+
+                for (int i = 0; i < toppingList.size(); i++){
+                    if (toppingList.get(i) == j){
+                        toppingList.remove(i--);
+                        switch(j){
+                        case 1:
+                            System.out.println("Removed cheese...");
+                        break;
+                        case 2:
+                            System.out.println("Removed pico de gallo...");
+                        break;
+                        case 3:
+                            System.out.println("Removed lettuce...");
+                        break;
+                        case 4:
+                            System.out.println("Removed sour cream...");
+                        break;
+                        case 5:
+                            System.out.println("Removed guacamole...");
+                        break;
+                        case 6:
+                            System.out.println("Removed mango salsa...");
+                        break;
+                        case 7:
+                            System.out.println("Removed peach salsa...");
+                        break;
+                        case 8:
+                            System.out.println("Removed mild sauce...");
+                        break;
+                        case 9:
+                            System.out.println("Removed hot sauce...");
+                        break;
+                        default:
+                            System.out.println("");
+                        break;
+                        }
+                    }
+                    }
+                }
+            else
+                toppingList.add(j);
         }
         return toppingList;      
     }
@@ -140,14 +190,21 @@ public class Client {
 
     public static Component customizeLeaf(Scanner input, String leaf){
         System.out.println("What type of rice would you like on your " + leaf + "?");
-        String rice =  input.nextLine();
+        String rice =  input.next();
+        input.nextLine();
         System.out.println("What type of meat would you like on your " + leaf + "?");
         String meat = input.nextLine();
         Component myOrder = null;
         switch (leaf){
             case "Taco":
-                myOrder = new Taco(rice, meat);
+                myOrder = new Taco(rice, meat,'r');
             break;
+            case "Stuffed taco":
+                myOrder = new Taco(rice, meat,'s');
+            break;
+            case "Outside taco":
+                myOrder = new Taco(rice, meat,'o');
+            break;  
             case "Burrito":
                 myOrder = new Burrito(rice, meat);
             break;
@@ -195,24 +252,31 @@ public class Client {
                 break;
 
                 case 4:
-                    Composite tacoSalad = new Composite("Taco Salad");
-                    Composite bowl = new Composite("Bowl");
-                    bowl.add(new Taco("White","Chicken"));
-                    bowl.add(new Taco("White","Chicken"));
-                    bowl.add(new Taco("White","Chicken"));
+                    Composite tacoSalad = new Composite("\nTaco Salad");
+                    Composite bowl = new Composite("\nBowl");
+                    bowl.add(new Lettuce(new Taco("White","Chicken",'r'),1));
+                    bowl.add(new Lettuce(new Taco("White","Chicken",'r'),1));
+                    bowl.add(new Lettuce(new Taco("White","Chicken",'r'),1));
                     tacoSalad.add(bowl);
-                    myOrder = tacoSalad;
-                    // Where to go from here? Make classes for each composite? Or no? How to keep track of tree?
-                    //(Composite) (tacoSalad.getChildren().get(0)).add(new Taco("White", "Chicken"));;
-                    
+                    myOrder = tacoSalad;  
                 break;
 
                 case 5:
-                    
+                    Composite doubleDeckerTaco = new Composite("\nDouble decker taco");
+                    Component stuffedTaco;
+                    Component outsideTaco;
+
+                    outsideTaco = customizeLeaf(input, "Outside taco");
+                    stuffedTaco = customizeLeaf(input, "Stuffed taco");
+
+
+                    doubleDeckerTaco.add(outsideTaco);
+                    doubleDeckerTaco.add(stuffedTaco);
+                    myOrder = doubleDeckerTaco;
                 break;
 
                 case 6:
-                    Composite orderOfTacos = new Composite("Three tacos");
+                    Composite orderOfTacos = new Composite("\nThree tacos");
                     System.out.println("Customize taco #1:");
                     orderOfTacos.add(customizeLeaf(input, "Taco"));
                     System.out.println("Customize taco #2:");
@@ -223,7 +287,7 @@ public class Client {
                 break;
 
                 case 7:
-                    Composite travelersPack = new Composite("Traveler's pack");
+                    Composite travelersPack = new Composite("\nTraveler's pack");
                     System.out.println("Customize taco #1:");
                     travelersPack.add(customizeLeaf(input, "Taco"));
                     System.out.println("Customize taco #2:");
@@ -234,7 +298,7 @@ public class Client {
                 break;
 
                 case 8:
-                    Composite samplerPack = new Composite("Sampler pack");
+                    Composite samplerPack = new Composite("\nSampler pack");
                     System.out.println("Customize taco:");
                     samplerPack.add(customizeLeaf(input, "Taco"));
                     System.out.println("Customize burrito:");
@@ -245,8 +309,8 @@ public class Client {
                 break;
 
                 case 9:
-                    Composite partyPack = new Composite("Party pack");
-                    Composite orderOfTacos1 = new Composite("First order of tacos");
+                    Composite partyPack = new Composite("\nParty pack");
+                    Composite orderOfTacos1 = new Composite("\nFirst order of tacos");
                     System.out.println("Customization of first order of tacos:");
                     System.out.println("Customize taco #1:");
                     orderOfTacos1.add(customizeLeaf(input, "Taco"));
@@ -255,7 +319,7 @@ public class Client {
                     System.out.println("Customize taco #3:");
                     orderOfTacos1.add(customizeLeaf(input, "Taco"));
 
-                    Composite orderOfTacos2 = new Composite("Second order of tacos");
+                    Composite orderOfTacos2 = new Composite("\nSecond order of tacos");
                     System.out.println("Customization of second order of tacos:");
                     System.out.println("Customize taco #4:");
                     orderOfTacos2.add(customizeLeaf(input, "Taco"));
@@ -264,7 +328,7 @@ public class Client {
                     System.out.println("Customize taco #6:");
                     orderOfTacos2.add(customizeLeaf(input, "Taco"));
 
-                    Composite orderOfTacos3 = new Composite("Third order of tacos");
+                    Composite orderOfTacos3 = new Composite("\nThird order of tacos");
                     System.out.println("Customization of third order of tacos:");
                     System.out.println("Customize taco #7:");
                     orderOfTacos3.add(customizeLeaf(input, "Taco"));
@@ -291,14 +355,16 @@ public class Client {
                 break;
             }
             if(myOrder != null){
-                System.out.println("\nHere's your order:\n" + myOrder.getDescription());
-                System.out.printf("Total cost: $%.2f\n", myOrder.getCost());
-
-                System.out.println("Would you like to get some more food (Y/N)?");
+                System.out.println("\nHere's what was added to your order:\n" + myOrder.getDescription());
+                System.out.printf("Cost: $%.2f\n", myOrder.getCost());
+                totalOrder.add(myOrder);
+                System.out.println("Would you like to order some more food (Y/N)?");
                 again = Character.toUpperCase(input.next().charAt(0));
             }
         }
         input.close();
+        System.out.println("\n" + totalOrder.getDescription());
+        System.out.printf("Total cost: $%.2f\n", totalOrder.getCost());
         System.out.println("Thank you for eating with us! Take care and remember to practice to social distancing!");
     }
 }
