@@ -39,7 +39,7 @@ public class Client {
         "Press 0 for no more toppings or press R to remove topping or enter an allergy.");
     }
 
-    public static int optionHandler(char o, String zero){
+    public static int optionHandler(char o, String zero){ // Used to handle input when choosing menu or topping options
         switch(o){
             case '0':
                 System.out.println(zero);
@@ -88,7 +88,6 @@ public class Client {
             if(j == 99){
                 System.out.println("Which topping would you like to remove or are allergic to?");
                 showToppings();
-                //input.nextLine();
                 c = input.next().charAt(0);
                 j = optionHandler(c, "You changed your mind? That's all good! Let's continue");
 
@@ -220,7 +219,7 @@ public class Client {
     }
 
     private static int getOrderNumber(){
-        return 4;
+        return 4; // Could randomize or could always be 4 ???? 
     }
     public static void main(String args[]){
         System.out.println("Hello hungry person.");
